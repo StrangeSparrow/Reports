@@ -24,7 +24,7 @@ public class ReportService {
     private Path pathToReports;
 
     @PostConstruct
-    void init() {
+    private void init() {
         pathToReports = Path.of(path);
     }
 
@@ -35,6 +35,7 @@ public class ReportService {
                     .filter(p -> !Files.isDirectory(p))
                     .map(Path::toFile)
                     .map(f -> new ReportDto(f.getName(), LocalDateTime.ofInstant(Instant.ofEpochMilli(f.lastModified()), ZoneId.systemDefault())))
+                    .doOnError(e -> files.close())
                     .doOnComplete(files::close);
         } catch (IOException e) {
             throw new ReportFindException("Path of reports is invalid", e);
