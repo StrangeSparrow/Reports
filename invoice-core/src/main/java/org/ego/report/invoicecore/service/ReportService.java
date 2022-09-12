@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,7 +45,7 @@ public class ReportService {
                     .map(f -> new ReportInfoDto(f.getName(), LocalDateTime.ofInstant(Instant.ofEpochMilli(f.lastModified()), ZoneId.systemDefault())))
                     .doOnError(e -> files.close())
                     .doOnComplete(files::close);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("[Report Service] - Path of reports - '{}' - is invalid", path, e);
             throw new ReportFindException("Path of reports is invalid", e);
         }
@@ -58,7 +57,7 @@ public class ReportService {
         try {
             Files.write(pathToFile, report.getData());
             log.info("[Report Service] - Report saved: {}", report.getName());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("[Report Service] - Report doesn't save: {}", report.getName(), e);
             throw new ReportSaveException(String.format("Report doesn't save: %s", report.getName()), e);
         }
@@ -72,7 +71,7 @@ public class ReportService {
             try {
                 if (file.exists() && file.isFile())
                     return new ReportDataDto(name, Files.readAllBytes(pathToFile));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("[Report Service] - Failed to download report: {}", name, e);
                 throw new ReportFindException("Failed to download report", e);
             }
