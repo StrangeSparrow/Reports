@@ -1,7 +1,7 @@
 package org.ego.report.invoicecore.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ego.report.invoicecore.dto.ReportDto;
+import org.ego.report.invoicecore.dto.ReportInfoDto;
 import org.ego.report.invoicecore.service.ReportService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping
-    public Flux<ReportDto> findAll() {
+    public Flux<ReportInfoDto> findAll() {
         return reportService.findAll();
     }
 }
